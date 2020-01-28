@@ -1,0 +1,10 @@
+# IntellijIdea files
+*.iml
+.idea
+
+out
+package-lock.json
+
+.idea/
+/dist/
+/node_modules/
