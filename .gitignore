@@ -8,3 +8,4 @@ package-lock.json
 .idea/
 /dist/
 /node_modules/
+node_modules/
