@@ -1,6 +1,10 @@
 let args = process.argv;
+let result = 0;
 
-for (item in args){
-    console.log(item);
+for (item of args){
+    let num = parseInt(item);
+    if (!isNaN(num)){
+        result += num;
+    }
 }
-console.log(process.argv);
+console.log(result);
