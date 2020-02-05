@@ -1,0 +1,34 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<form name="person">
+    <input type="file" name="myFile">
+    <input type="submit" value="Отправить">
+</form>
+<script>
+
+
+    document.forms.person.addEventListener('submit', function(e){
+        e.preventDefault();
+
+        let file = $('input[name=myFile]').prop("files")[0];
+
+        if(file){
+            $.ajax({
+                type:'POST',
+                url:'/',
+                processData: false,
+                data: file,
+                success:function(){
+                    console.log('Данные отправлены');
+                }
+            });
+        }
+
+    });
+</script>
+</body>
+</html>

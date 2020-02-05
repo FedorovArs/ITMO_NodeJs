@@ -1,0 +1,19 @@
+{
+  "name": "my_package_name",
+  "version": "1.0.0",
+  "description": "это мой пакет",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jquery": "^3.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "ping"
+  },
+  "keywords": [
+    "qwerty"
+  ],
+  "author": "Ars",
+  "license": "MIT"
+}
