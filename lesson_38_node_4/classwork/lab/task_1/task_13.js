@@ -7,14 +7,16 @@ http.createServer(function(req, res){
     let urlObj = new URL(req.url, 'http://localhost:8080');
 
     if (urlObj.pathname === "/api/parsetime"){
-        console.log("!!!!!! " + urlObj.searchParams);
-        res.end();
+        let timeStr = decodeURIComponent(urlObj.searchParams.get('iso'));
+        let date = Date.parse(timeStr);
+        date = new Date(date);
+        let result = {"hour": date.getHours(), "minute": date.getMinutes(), "second": date.getSeconds()};
+        res.end(JSON.stringify(result));
     } else if (urlObj.pathname === "/api/unixtime"){
-        console.log("?????? " + urlObj.searchParams);
-        res.end();
+        let timeStr = decodeURIComponent(urlObj.searchParams.get('iso'));
+        let unixtime = Date.parse(timeStr);
+        let result = {"unixtime": unixtime};
+        res.end(JSON.stringify(result));
     }
-
-    res.write(JSON.stringify({"hour": 14, "minute":23, "second": 15}));
-
 
 }).listen(port);
