@@ -1,0 +1,2 @@
+GET /admin 304 - - 11.588 ms
+GET /favicon.ico 200 5 - 1.948 ms
