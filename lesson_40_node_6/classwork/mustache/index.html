@@ -1,0 +1,39 @@
+<html>
+<head>
+    <script src="mustache.min.js"></script>
+</head>
+<body>
+<script>
+    var data = {
+        "person": [
+            {name: "sasha", age: 18},
+            {name: "petr", age: 22},
+            {name: "ivan", age: 32},
+        ]
+    };
+
+    var template = "{{#person}}" +
+        "<p>{{name}}-{{age}}</p>" +
+        "{{/person}}";
+
+    var result = Mustache.render(template, data);
+
+    document.body.innerHTML = result;
+
+    /*var data = {
+        album:{
+            title: 'Всем привет',
+            artist: 'Алла Борисовна'
+        }
+    };
+
+    var template = "{{album.title}}!!!. {{album.artist}} любит вас.";
+
+    var result = Mustache.render(template, data);
+
+    console.log(result);*/
+
+
+</script>
+</body>
+</html>
