@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чатик</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #fcfcfc;
+            font-family: Roboto, Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            margin: 0 auto;
+            display: flex;
+            flex-direction: row;
+
+        }
+
+        #name,
+        #message,
+        #groupName,
+        #recipient_list {
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-family: inherit;
+        }
+
+        #message {
+            resize: none;
+            min-height: 80px;
+        }
+
+        .mess_item {
+            text-align: left;
+            overflow-wrap: break-word;
+            padding: 15px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            /* margin-bottom: 10px; */
+        }
+
+        .mess_item:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        #messForm {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid black;
+            margin-right: 15px;
+        }
+
+        #all_mess {
+            width: 250px;
+            height: 373px;
+            border: 1px solid black;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        #createGroup {
+            border: 1px solid black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #send,
+        #create-group-btn {
+            width: 150px;
+            height: 30px;
+
+            color: white;
+            background-color: rgb(82, 83, 94);
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        #create-group-btn {
+            margin-top: 20px;
+        }
+
+        .messData {
+            font-size: 12px;
+        }
+    </style>
+
+</head>
+
+<body>
+<h2>Чатик</h2>
+<div class="container">
+    <div>
+        <h3>Форма отправки</h3>
+        <form id="messForm">
+            <label for="name">Имя пользователя</label>
+            <input type="text" name="name" id="name" placeholder="Введите имя">
+            <br>
+
+            <label>Получатель</label><br>
+            <input name="recipient_list" id="recipient_list" placeholder="Введите имя получателя" list="users_list">
+            <datalist id="users_list">
+            </datalist>
+            <br>
+
+            <label for="message">Сообщение</label>
+            <textarea name="message" id="message" placeholder="Введите сообщение"></textarea>
+            <br>
+            <button id="send" type="submit">Отправить</button>
+        </form>
+    </div>
+
+    <div>
+        <h3>Все сообщения</h3>
+        <div id="all_mess">
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <h3>Создание группы</h3>
+    <form id="createGroup">
+        <label for="name">Имя группы</label><br>
+        <input type="text" name="name" id="groupName" placeholder="Введите имя группы">
+        <input id="create-group-btn" type="submit" value="Отправить">
+    </form>
+</div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+    $(function () {
+        let socket = io.connect();
+        let form = $("#messForm");
+        let name = $("#name");
+        let textarea = $("#message");
+
+        let createGroupForm = $("#createGroup");
+        let groupName = $("#groupName");
+
+        let users_list = $('#users_list')
+
+        let all_messages = $("#all_mess");
+
+        form.submit(function (event) {
+            event.preventDefault();
+            socket.emit('send mess', {mess: textarea.val(), name: name.val()});
+            socket.emit('get users');
+            textarea.val('');
+        });
+
+
+        function addZero(i) {
+            if (i < 10) {
+                i = `0` + i;
+            }
+            return i;
+        }
+
+        socket.on('add mess', function (data) {
+            let date = new Date();
+            let messDate = `${date.getFullYear()}-${addZero(date.getMonth())}-${addZero(date.getDate())} ${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`
+            all_messages.append("<div class='mess_item'>" + "<span class='messData'>" + messDate + "</span>" + "<br>" + "<b>" + data.name + "</b>: " + data.mess + "</div>");
+        });
+
+        createGroupForm.submit(function (event) {
+            event.preventDefault();
+            socket.emit('create room', {roomName: groupName.val()});
+        });
+
+        socket.on('create room info', function (data) {
+            console.log(data.mess)
+        });
+
+        socket.on('general users', function (data) {
+            for (let i = 0; i < data.users.length; i++) {
+                console.log(data.users[i]);
+                users_list.append('<option>' + data.users[i] + '</option> <br>');
+            }
+        });
+
+
+    });
+</script>
+</body>
+</html>
