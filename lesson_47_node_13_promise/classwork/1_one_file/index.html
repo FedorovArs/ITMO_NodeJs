@@ -1,0 +1,39 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+<h1>Один файл</h1>
+<script>
+
+    function asyncFunc(resolve, reject) {
+        setTimeout(function () {
+            resolve({a: 1});
+        }, 5000);
+    }
+
+    let promise = new Promise(asyncFunc);
+    console.dir(promise);
+
+    promise
+        .then(function (data) {
+            console.log('Успех 1!', data);
+            return new Promise(asyncFunc);
+        })
+        .then(function (data) {
+            console.log('Успех 2!', data);
+            throw new Error('Error2');
+        })
+        .then(function (data) {
+            console.log('Успех 3!', data);
+        })
+        .catch(function (err) {
+            console.log('Ошибка!', err);
+        });
+
+    Promise.resolve('asd').then(function (data) {
+        console.log('!!!', data);
+    });
+</script>
+</body>
+</html>

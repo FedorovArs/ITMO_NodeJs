@@ -1,0 +1,34 @@
+<html>
+<head>
+
+</head>
+<body>
+<script>
+
+    function asyncFunc(resolve, reject){
+        setTimeout(function(){
+            resolve({a:1});
+        }, 5000);
+    }
+
+    let promise = new Promise(asyncFunc);
+    console.dir(promise);
+
+    promise
+        .then(function(data){
+            console.log('Успех 1!', data);
+            return new Promise(asyncFunc);
+        })
+        .then(function(data){
+            console.log('Успех 2!', data);
+            throw new Error('Error2');
+        })
+        .then(function(data){
+            console.log('Успех 3!', data);
+        })
+        .catch(function(err){
+            console.log('Ошибка!', err);
+        });
+</script>
+</body>
+</html>
